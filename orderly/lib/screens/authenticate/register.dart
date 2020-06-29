@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:orderly/services/auth.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
 
   String email = '';
@@ -19,7 +19,7 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.green[500],
         elevation: 0.0,
-        title: Text('Sign In bruh'),
+        title: Text('Register bruh'),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
@@ -54,7 +54,7 @@ class _SignInState extends State<SignIn> {
                   _auth.signInWithMail(email, password);
                 },
                 child: Text(
-                  'Sign in',
+                  'Register',
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.deepOrange[700],
