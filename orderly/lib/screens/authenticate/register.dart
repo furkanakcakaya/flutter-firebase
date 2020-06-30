@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:orderly/services/auth.dart';
+import 'package:orderly/shared/constants.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -11,8 +12,10 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
 
+  String error = '';
   String email = '';
   String password = '';
 
@@ -36,20 +39,28 @@ class _RegisterState extends State<Register> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: Form(
+          key: _formKey,
           child: Column(
             children: <Widget>[
               SizedBox(
                 height: 20,
               ),
-              TextFormField(onChanged: (value) {
-                setState(() {
-                  email = value;
-                });
-              }),
+              TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: 'E-mail'),
+                  validator: (value) => value.isEmpty ? 'Enter an email' : null,
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  }),
               SizedBox(
                 height: 20,
               ),
               TextFormField(
+                decoration: textInputDecoration.copyWith(hintText: 'Password'),
+                validator: (value) => value.isEmpty
+                    ? 'Enter a longer password (6 or more)'
+                    : null,
                 onChanged: (value) {
                   setState(() {
                     password = value;
@@ -61,15 +72,32 @@ class _RegisterState extends State<Register> {
                 height: 20,
               ),
               RaisedButton(
-                onPressed: () {
-                  print('Email: $email, Pass: $password');
-                  _auth.signInWithMail(email, password);
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    dynamic result = await _auth.registerWithEmailAndPassword(
+                        email, password);
+                    if (result == null) {
+                      setState(() {
+                        error = 'Something isn\'t right';
+                      });
+                    }
+                  }
                 },
                 child: Text(
                   'Register',
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.deepOrange[700],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                ),
               )
             ],
           ),

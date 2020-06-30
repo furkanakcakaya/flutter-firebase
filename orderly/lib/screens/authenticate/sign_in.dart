@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orderly/shared/constants.dart';
 import 'package:orderly/services/auth.dart';
 
 class SignIn extends StatefulWidget {
@@ -12,6 +13,8 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  String error = '';
 
   String email = '';
   String password = '';
@@ -36,20 +39,30 @@ class _SignInState extends State<SignIn> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: Form(
+          key: _formKey,
           child: Column(
             children: <Widget>[
               SizedBox(
                 height: 20,
               ),
-              TextFormField(onChanged: (value) {
-                setState(() {
-                  email = value;
-                });
-              }),
+              TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: 'E-mail'),
+                  validator: (value) => value.isEmpty
+                      ? 'Enter a longer password (6 or more)'
+                      : null,
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  }),
               SizedBox(
                 height: 20,
               ),
               TextFormField(
+                decoration: textInputDecoration.copyWith(hintText: 'Password'),
+                validator: (value) => value.isEmpty
+                    ? 'Enter a longer password (6 or more)'
+                    : null,
                 onChanged: (value) {
                   setState(() {
                     password = value;
@@ -61,9 +74,16 @@ class _SignInState extends State<SignIn> {
                 height: 20,
               ),
               RaisedButton(
-                onPressed: () {
-                  print('Email: $email, Pass: $password');
-                  _auth.signInWithMail(email, password);
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    dynamic result =
+                        await _auth.signInWithEmailAndPassword(email, password);
+                    if (result == null) {
+                      setState(() {
+                        error = 'Something isn\'t right';
+                      });
+                    }
+                  }
                 },
                 child: Text(
                   'Sign in',

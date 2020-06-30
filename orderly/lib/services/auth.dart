@@ -26,18 +26,29 @@ class AuthService {
   }
 
   //sign in with e-mail
-  Future signInWithMail(String mail, String pass) async {
+  Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result =
-          await _auth.signInWithEmailAndPassword(email: mail, password: pass);
+      AuthResult result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       return _userFromFirebaseUser(result.user);
     } catch (e) {
-      print('Email sign-in failed. Error: $e');
+      print('Email sign-in failed. Error: ${e.toString()}');
       return null;
     }
   }
 
   //register with e-mail
+
+  Future registerWithEmailAndPassword(String email, String password) async {
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return _userFromFirebaseUser(result.user);
+    } catch (e) {
+      print('Error occured when registering. Error: $e');
+      return null;
+    }
+  }
 
   //sign out
   Future signOut() async {
