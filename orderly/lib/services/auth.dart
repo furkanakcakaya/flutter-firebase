@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:orderly/models/user.dart';
+import 'package:orderly/services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -43,6 +44,10 @@ class AuthService {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      await DatabaseService(uid: result.user.uid)
+          .updateUserData('new member', 'type', 100);
+
       return _userFromFirebaseUser(result.user);
     } catch (e) {
       print('Error occured when registering. Error: $e');
