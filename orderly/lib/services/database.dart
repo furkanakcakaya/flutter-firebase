@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:orderly/models/order.dart';
+import 'package:orderly/models/user.dart';
 
 class DatabaseService {
   final String uid;
@@ -26,8 +27,25 @@ class DatabaseService {
     }).toList();
   }
 
+  // Userdata from snapshot
+  Userdata _userDataFromSnapshot(DocumentSnapshot ds) {
+    return Userdata(
+      uid: uid,
+      name: ds.data['name'],
+      type: ds.data['type'],
+      amount: ds.data['amount'],
+    );
+  }
+
   // Get orders stream
   Stream<List<Order>> get orders {
     return orderCollectionRef.snapshots().map(_orderListFromSnapshot);
+  }
+
+  Stream<Userdata> get userData {
+    return orderCollectionRef
+        .document(uid)
+        .snapshots()
+        .map(_userDataFromSnapshot);
   }
 }
