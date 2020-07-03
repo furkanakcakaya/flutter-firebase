@@ -43,7 +43,12 @@ class Home extends StatelessWidget {
                 label: Text('Sign out'))
           ],
         ),
-        body: OrderList(),
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/shelf.jpg'), fit: BoxFit.cover),
+            ),
+            child: OrderList()),
       ),
     );
   }

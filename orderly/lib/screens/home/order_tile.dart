@@ -15,6 +15,7 @@ class OrderTile extends StatelessWidget {
           leading: CircleAvatar(
             radius: 25,
             backgroundColor: Colors.green[order.amount],
+            backgroundImage: AssetImage('assets/book2.png'),
           ),
           title: Text(order.name),
           subtitle: Text('Wants ${order.type} for ${order.amount}\$'),

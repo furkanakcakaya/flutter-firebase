@@ -16,7 +16,7 @@ class _SettingsFormState extends State<SettingsForm> {
   final List<String> types = ['SLH', 'PHZ', 'AMN', 'SSH', 'ASK', 'OGK'];
 
   String _currentName;
-  String _currentType;
+  String _currentType = 'SLH';
   int _currentAmount;
 
   @override
@@ -28,7 +28,6 @@ class _SettingsFormState extends State<SettingsForm> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Userdata userData = snapshot.data;
-            print(userData.type);
             return Form(
               key: _formKey,
               child: Column(
@@ -79,9 +78,13 @@ class _SettingsFormState extends State<SettingsForm> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
-                      print(_currentName);
-                      print(_currentType);
-                      print(_currentAmount);
+                      if (_formKey.currentState.validate()) {
+                        await DatabaseService(uid: userData.uid).updateUserData(
+                            _currentName ?? userData.name,
+                            _currentType ?? userData.type,
+                            _currentAmount ?? userData.amount);
+                      }
+                      Navigator.pop(context);
                     },
                   )
                 ],
